@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/02 14:26:38 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/06 06:11:50 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	*free_all(t_file *file)
 	return (NULL);
 }
 
-void	*dump_buffer(t_file *file, void *dst, size_t nbytes)
+void	dump_buffer(t_file *file, void *dst, size_t nbytes)
 {
 	size_t	indx;
 
@@ -40,6 +40,10 @@ void	*dump_buffer(t_file *file, void *dst, size_t nbytes)
 	}
 }
 
+void print_shit (t_buff *buff) {
+	printf("%p: data->%p, next->%p\n", buff, buff->data, buff->next);
+}
+
 char	*get_next_line(int fd)
 {
 	static t_file	files[FD_MAX];
@@ -48,8 +52,14 @@ char	*get_next_line(int fd)
 		return (free_all(&files[fd]));
 	// next_line(&files[fd], fd);
 
-	push_buff(&files[fd]);
-	keep_buff(&files[fd]);
+	while (!files[fd].eof)
+	{
+		if (!push_buff(&files[fd]))
+			free_all(&files[fd]);
+		(&files[fd])->size += read(fd,
+			&files[fd].buffer->last->data, BUFFER_SIZE);
+	}
 
+	free_all(&files[fd]);
 	return ("");
 }
