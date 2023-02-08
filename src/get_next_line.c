@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/06 06:11:50 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/08 23:28:23 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ void	*free_all(t_file *file)
 	free(file->buff_re);
 	return (NULL);
 }
+
+/*int	next_line (t_file)
+{
+
+}*/
 
 void	dump_buffer(t_file *file, void *dst, size_t nbytes)
 {
@@ -41,7 +46,7 @@ void	dump_buffer(t_file *file, void *dst, size_t nbytes)
 }
 
 void print_shit (t_buff *buff) {
-	printf("%p: data->%p, next->%p\n", buff, buff->data, buff->next);
+	printf("[%p]->", buff);
 }
 
 char	*get_next_line(int fd)
@@ -52,13 +57,7 @@ char	*get_next_line(int fd)
 		return (free_all(&files[fd]));
 	// next_line(&files[fd], fd);
 
-	while (!files[fd].eof)
-	{
-		if (!push_buff(&files[fd]))
-			free_all(&files[fd]);
-		(&files[fd])->size += read(fd,
-			&files[fd].buffer->last->data, BUFFER_SIZE);
-	}
+	//
 
 	free_all(&files[fd]);
 	return ("");

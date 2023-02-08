@@ -6,11 +6,12 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:58:11 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/06 06:05:25 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/08 23:26:24 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 t_buff	*push_buff(t_file *file)
 {
@@ -44,7 +45,7 @@ t_buff	*keep_buff(t_file *file)
 {
 	t_buff	*tmp;
 
-	if (!file->buffer->nodes)
+	if (!file->buffer || !file->buffer->nodes)
 		return (NULL);
 	tmp = file->buffer->nodes;
 	file->buffer->nodes = file->buffer->nodes->next;
@@ -70,16 +71,21 @@ t_buff	*reuse_buff(t_file *file)
 {
 	t_buff	*tmp;
 
-	if (!file->buff_re)
-		return (NULL);
-	if (!file->buff_re->nodes)
+	if (!file->buff_re || !file->buff_re->nodes)
 		return (NULL);
 	tmp = file->buff_re->nodes;
 	file->buff_re->nodes = file->buff_re->nodes->next;
+	if (!file->buffer->nodes)
+	{
+		file->buffer->nodes = tmp;
+		file->buffer->nodes->next = NULL;
+		file->buffer->last = file->buffer->nodes;
+		return (file->buffer->last);
+	}
 	file->buffer->last->next = tmp;
 	file->buffer->last->next->next = NULL;
 	file->buffer->last = file->buffer->last->next;
-	file->len++;
+	file->len--;
 	return (file->buffer->last);
 }
 
