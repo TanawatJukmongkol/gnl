@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 19:42:14 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/01/14 23:17:41 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/09 07:44:30 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ int	main(void)
 	str = get_next_line(fd);
 	printf("%s", str);
 	close(fd);
+	free(str);
 	return (0);
 }

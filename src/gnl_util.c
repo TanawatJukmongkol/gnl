@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:58:11 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/08 23:26:24 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/09 06:28:27 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_buff	*push_buff(t_file *file)
 		file->buffer->last = file->buffer->nodes;
 		file->offset = 0;
 		file->len = 1;
+		file->str = NULL;
 		return (file->buffer->nodes);
 	}
 	file->buffer->last->next = malloc(sizeof(t_buff));
