@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:31 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/09 06:39:23 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/09 17:12:24 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_file
 	size_t		size;
 	char		*str;
 	int			eof;
+	int			no_line_left;
 }				t_file;
 
 char	*get_next_line(int fd);

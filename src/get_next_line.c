@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/09 08:05:10 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/09 22:26:42 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,56 +25,59 @@ void	*free_all(t_file *file)
 int	next_line(t_file *file, int fd)
 {
 	ssize_t	read_size;
-	ssize_t	str_len;
+	ssize_t	slen;
 	ssize_t	indx;
 
-	str_len = 0;
+	read_size = 0;
+	slen = 0;
+	(void)(fd);
 	while (1)
 	{
-		if (file->buff_re && file->buff_re->nodes)
-			reuse_buff(file);
-		else
-			push_buff(file);
-		read_size = read(fd, file->buffer->last->data, BUFFER_SIZE);
-		if (read_size < 0)
-			return (1);
-		else if (read_size == 0)
-			file->eof = 1;
-		indx = 0;
-		while (indx < read_size
-			&& file->buffer->last->data[indx - 1] != '\n')
-			indx++;
-		str_len += indx;
-		if (file->buffer->last->data[indx - 1] == '\n')
+		if (file->buffer && file->buffer->last)
 		{
-			indx = 0;
-			if (file->str)
+			indx = file->offset;
+			while (indx < read_size && file->buffer->last->data[indx] != '\n')
 			{
-				free(file->str);
-				file->str = NULL;
-			}
-			file->str = malloc(str_len + 1);
-			file->str[str_len] = '\0';
-			while (indx < str_len)
-			{
-				if ((file->offset + indx) == BUFFER_SIZE)
-				{
-					indx = 0;
-					keep_buff(file);
-				}
-				file->str[indx] = file->buffer->nodes->data[
-					(file->offset + indx) % BUFFER_SIZE];
-				file->offset++;
 				indx++;
+				slen++;
 			}
-			return (0);
+			if (file->buffer->last->data[indx] == '\n')
+			{
+				file->str = malloc(slen + 1);
+				file->str[slen] = '\0';
+				indx = 0;
+				while (indx < slen)
+				{
+					if (file->offset == BUFFER_SIZE)
+					{
+						file->offset = 0;
+						keep_buff(file);
+					}
+					file->str[indx] = file->buffer->nodes->data[file->offset];
+					file->offset++;
+					indx++;
+				}
+				return (0);
+			}
+		}
+		if (!file->eof)
+		{
+			if (file->buff_re && file->buff_re->nodes && !reuse_buff(file))
+				return (1);
+			else if (!push_buff(file))
+				return (1);
+			read_size = read(fd, file->buffer->last->data, BUFFER_SIZE);
+			if (read_size < 0)
+				return (1);
+			else if (read_size == 0)
+				file->eof = 1;
 		}
 	}
 }
 
 void	print_shit(t_buff *buff)
 {
-	printf("[%p]->", buff);
+	printf("[%s]->", buff->data);
 }
 
 char	*get_next_line(int fd)
@@ -83,9 +86,16 @@ char	*get_next_line(int fd)
 
 	if (fd < 0)
 		return (free_all(&files[fd]));
-
+	if (files[fd].no_line_left)
+		return (NULL);
+	if (files[fd].str)
+		free(files[fd].str);
+	files[fd].str = NULL;
 	if (next_line(&files[fd], fd))
 		return (NULL);
-	free_all(&files[fd]);
+	
+	// printf("\nfile offset: %lu\n", files[fd].offset);
+	// ittr_buff(&files[fd].buff_re->nodes, print_shit);
+
 	return (files[fd].str);
 }
