@@ -1,58 +1,97 @@
 [1;36m========-[ Execution output ]-========[0;37m
-54$
-Hello, world! abcdefghijklmnopqrstuvwxyz t$
+file len: 1 string len: 1
+"a
+"
+file len: 1 string len: 1
+"b
+"
+file len: 1file len: 2 string len: 0
+"
+"
+
+--- END! ---
+"(null)"
+
+--- END! ---
+"(null)"
+
+--- END! ---
+"(null)"
 
 [1;35m============-[ Valgrind ]-============[0;37m
-==4489== Memcheck, a memory error detector
-==4489== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==4489== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
-==4489== Command: ./src/main.out --leak-check=full --show-reachable=yes
-==4489== 
-==4489== Invalid read of size 1
-==4489==    at 0x1092F9: next_line (get_next_line.c:44)
-==4489==    by 0x1095BA: get_next_line (get_next_line.c:95)
-==4489==    by 0x1091C6: main (main.c:23)
-==4489==  Address 0x4a7410a is 0 bytes after a block of size 42 alloc'd
-==4489==    at 0x4841888: malloc (vg_replace_malloc.c:381)
-==4489==    by 0x109669: push_buff (gnl_util.c:24)
-==4489==    by 0x109425: next_line (get_next_line.c:68)
-==4489==    by 0x1095BA: get_next_line (get_next_line.c:95)
-==4489==    by 0x1091C6: main (main.c:23)
-==4489== 
-==4489== Invalid read of size 1
-==4489==    at 0x1093A4: next_line (get_next_line.c:57)
-==4489==    by 0x1095BA: get_next_line (get_next_line.c:95)
-==4489==    by 0x1091C6: main (main.c:23)
-==4489==  Address 0x4a7410a is 0 bytes after a block of size 42 alloc'd
-==4489==    at 0x4841888: malloc (vg_replace_malloc.c:381)
-==4489==    by 0x109669: push_buff (gnl_util.c:24)
-==4489==    by 0x109425: next_line (get_next_line.c:68)
-==4489==    by 0x1095BA: get_next_line (get_next_line.c:95)
-==4489==    by 0x1091C6: main (main.c:23)
-==4489== 
-54
-Hello, world! abcdefghijklmnopqrstuvwxyz t
-==4489== 
-==4489== HEAP SUMMARY:
-==4489==     in use at exit: 148 bytes in 6 blocks
-==4489==   total heap usage: 8 allocs, 2 frees, 4,299 bytes allocated
-==4489== 
-==4489== LEAK SUMMARY:
-==4489==    definitely lost: 0 bytes in 0 blocks
-==4489==    indirectly lost: 0 bytes in 0 blocks
-==4489==      possibly lost: 0 bytes in 0 blocks
-==4489==    still reachable: 148 bytes in 6 blocks
-==4489==         suppressed: 0 bytes in 0 blocks
-==4489== Rerun with --leak-check=full to see details of leaked memory
-==4489== 
-==4489== For lists of detected and suppressed errors, rerun with: -s
-==4489== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==154408== Memcheck, a memory error detector
+==154408== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==154408== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==154408== Command: ./src/main.out --leak-check=full --show-reachable=yes
+==154408== 
+==154408== Conditional jump or move depends on uninitialised value(s)
+==154408==    at 0x1093ED: next_line (get_next_line.c:47)
+==154408==    by 0x10972F: get_next_line (get_next_line.c:114)
+==154408==    by 0x109218: main (main.c:30)
+==154408== 
+file len: 1 string len: 1
+"a
+"
+file len: 1 string len: 1
+"b
+"
+file len: 1file len: 2 string len: 0
+"
+"
+
+--- END! ---
+"(null)"
+
+--- END! ---
+"(null)"
+
+--- END! ---
+"(null)"
+==154408== 
+==154408== HEAP SUMMARY:
+==154408==     in use at exit: 134 bytes in 6 blocks
+==154408==   total heap usage: 9 allocs, 3 frees, 4,236 bytes allocated
+==154408== 
+==154408== LEAK SUMMARY:
+==154408==    definitely lost: 0 bytes in 0 blocks
+==154408==    indirectly lost: 0 bytes in 0 blocks
+==154408==      possibly lost: 0 bytes in 0 blocks
+==154408==    still reachable: 134 bytes in 6 blocks
+==154408==         suppressed: 0 bytes in 0 blocks
+==154408== Rerun with --leak-check=full to see details of leaked memory
+==154408== 
+==154408== Use --track-origins=yes to see where uninitialised values come from
+==154408== For lists of detected and suppressed errors, rerun with: -s
+==154408== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
 [1;32m===========-[ Norm errors ]-==========[0;37m
 ./src/get_next_line.c: Error!
-Error: TOO_MANY_LINES       (line:  77, col:   1):	Function has more than 25 lines
-Error: EMPTY_LINE_FUNCTION  (line:  97, col:   1):	Empty line in function
-Error: SPACE_EMPTY_LINE     (line:  97, col:   1):	Space on empty line
-Error: WRONG_SCOPE_COMMENT  (line:  98, col:   5):	Comment is invalid in this scope
-Error: WRONG_SCOPE_COMMENT  (line:  99, col:   5):	Comment is invalid in this scope
-Error: EMPTY_LINE_FUNCTION  (line: 100, col:   1):	Empty line in function
+Error: WRONG_SCOPE_COMMENT  (line:  43, col:  13):	Comment is invalid in this scope
+Error: WRONG_SCOPE_COMMENT  (line:  44, col:  13):	Comment is invalid in this scope
+Error: LINE_TOO_LONG        (line:  55, col:  82):	line too long
+Error: EMPTY_LINE_FUNCTION  (line:  92, col:   1):	Empty line in function
+Error: CONSECUTIVE_NEWLINES (line:  93, col:   1):	Consecutive newlines
+Error: EMPTY_LINE_FUNCTION  (line:  93, col:   1):	Empty line in function
+Error: TOO_MANY_LINES       (line:  94, col:   1):	Function has more than 25 lines
+Error: EMPTY_LINE_FUNCTION  (line: 102, col:   1):	Empty line in function
+Error: WRONG_SCOPE_COMMENT  (line: 105, col:   9):	Comment is invalid in this scope
+Error: EMPTY_LINE_FUNCTION  (line: 109, col:   1):	Empty line in function
+Error: EMPTY_LINE_FUNCTION  (line: 113, col:   1):	Empty line in function
+Error: EMPTY_LINE_FUNCTION  (line: 116, col:   1):	Empty line in function
+Error: SPACE_EMPTY_LINE     (line: 116, col:   1):	Space on empty line
+Error: WRONG_SCOPE_COMMENT  (line: 117, col:   5):	Comment is invalid in this scope
+Error: EMPTY_LINE_FUNCTION  (line: 118, col:   1):	Empty line in function
+./src/main.c: Error!
+Error: EMPTY_LINE_FUNCTION  (line:  23, col:   1):	Empty line in function
+Error: SPACE_EMPTY_LINE     (line:  23, col:   1):	Space on empty line
+Error: EMPTY_LINE_FUNCTION  (line:  26, col:   1):	Empty line in function
+Error: SPACE_EMPTY_LINE     (line:  26, col:   1):	Space on empty line
+Error: EMPTY_LINE_FUNCTION  (line:  29, col:   1):	Empty line in function
+Error: EMPTY_LINE_FUNCTION  (line:  32, col:   1):	Empty line in function
+Error: EMPTY_LINE_FUNCTION  (line:  35, col:   1):	Empty line in function
+Error: EMPTY_LINE_FUNCTION  (line:  38, col:   1):	Empty line in function
+Error: EMPTY_LINE_FUNCTION  (line:  41, col:   1):	Empty line in function
+Error: WRONG_SCOPE_COMMENT  (line:  42, col:   5):	Comment is invalid in this scope
+Error: WRONG_SCOPE_COMMENT  (line:  43, col:   5):	Comment is invalid in this scope
+Error: EMPTY_LINE_FUNCTION  (line:  44, col:   1):	Empty line in function
+Error: TOO_MANY_LINES       (line:  48, col:   1):	Function has more than 25 lines
 [1;32m======================================[0;37m

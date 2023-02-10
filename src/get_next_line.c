@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/10 12:28:47 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/11 06:37:13 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,63 +22,75 @@ void	*free_all(t_file *file)
 	return (NULL);
 }
 
+void	print_shit(t_buff *buff)
+{
+	printf("[%s]->", buff->data);
+}
+
 int	next_line(t_file *file, int fd)
 {
-	ssize_t	read_size;
 	ssize_t	slen;
 	ssize_t	indx;
 
-	read_size = 0;
 	slen = 0;
 	(void)(fd);
 	while (1)
 	{
 		if (file->buffer && file->buffer->last)
 		{
-			indx = file->offset + 1;
-			while (indx < read_size && file->buffer->last->data[indx] != '\n')
+			printf("file len: %lu", file->len);
+			indx = file->offset;
+			// printf("\n====================================\n");
+			// ittr_buff(&file->buffer->nodes, print_shit);
+			while (indx < file->size || file->eof)
 			{
+				if (file->buffer->last->data[indx] == '\0'
+					|| file->buffer->last->data[indx] == '\n')
+				{
+					printf(" string len: %lu\n", slen);
+					indx = 0;
+					file->str = malloc(slen + 2);
+					while (indx < slen)
+					{
+						file->str[indx] = file->buffer->nodes->data[file->offset];
+						file->offset++;
+						if (file->offset == BUFFER_SIZE)
+						{
+							file->offset = 0;
+							file->read_state = 0;
+							keep_buff(file);
+						}
+						indx++;
+					}
+					file->offset++;
+					file->str[slen] = '\n';
+					file->str[slen + 1] = '\0';
+					return (0);
+				}
 				indx++;
 				slen++;
 			}
-			if (file->buffer->last->data[indx] == '\n')
-			{
-				printf("%lu\n", slen);
-				file->str = malloc(slen + 1);
-				file->str[slen] = '\0';
-				indx = 0;
-				while (indx < slen)
-				{
-					if (file->offset > BUFFER_SIZE)
-					{
-						file->offset = 0;
-						keep_buff(file);
-					}
-					file->str[indx] = file->buffer->nodes->data[file->offset];
-					file->offset++;
-					indx++;
-				}
-				return (0);
-			}
+			file->read_state = 0;
 		}
-		if (!file->eof)
+		if (!file->eof && !file->read_state)
 		{
 			if (file->buff_re && file->buff_re->nodes && !reuse_buff(file))
 				return (1);
 			else if (!push_buff(file))
 				return (1);
-			read_size = read(fd, file->buffer->last->data, BUFFER_SIZE);
-			if (read_size < 0)
+			file->size = read(fd, file->buffer->last->data, BUFFER_SIZE);
+			if (file->size < 0)
 				return (1);
-			else if (read_size == 0)
+			else if (file->size == 0)
+			{
 				file->eof = 1;
+				*file->buffer->last->data = EOF;
+			}
+			file->read_state = 1;
 		}
 	}
-}
 
-void	print_shit(t_buff *buff)
-{
-	printf("[%s]->", buff->data);
+
 }
 
 char	*get_next_line(int fd)
@@ -86,17 +98,23 @@ char	*get_next_line(int fd)
 	static t_file	files[FD_MAX];
 
 	if (fd < 0)
-		return (free_all(&files[fd]));
-	if (files[fd].no_line_left)
 		return (NULL);
+
+	if (files[fd].eof)
+	{
+		// free_all(&files[fd]);
+		printf("\n--- END! ---\n");
+		return (NULL);
+	}
+
 	if (files[fd].str)
 		free(files[fd].str);
 	files[fd].str = NULL;
+
 	if (next_line(&files[fd], fd))
 		return (NULL);
 	
 	// printf("\nfile offset: %lu\n", files[fd].offset);
-	// ittr_buff(&files[fd].buff_re->nodes, print_shit);
 
 	return (files[fd].str);
 }
