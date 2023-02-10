@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/09 22:26:42 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/10 12:28:47 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	next_line(t_file *file, int fd)
 	{
 		if (file->buffer && file->buffer->last)
 		{
-			indx = file->offset;
+			indx = file->offset + 1;
 			while (indx < read_size && file->buffer->last->data[indx] != '\n')
 			{
 				indx++;
@@ -43,12 +43,13 @@ int	next_line(t_file *file, int fd)
 			}
 			if (file->buffer->last->data[indx] == '\n')
 			{
+				printf("%lu\n", slen);
 				file->str = malloc(slen + 1);
 				file->str[slen] = '\0';
 				indx = 0;
 				while (indx < slen)
 				{
-					if (file->offset == BUFFER_SIZE)
+					if (file->offset > BUFFER_SIZE)
 					{
 						file->offset = 0;
 						keep_buff(file);
