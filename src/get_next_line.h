@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:31 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/11 04:12:18 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/11 15:32:26 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_file
 	t_buffer	*buff_re;
 	size_t		offset;
 	size_t		len;
-	ssize_t		size;
+	size_t		size;
 	char		*str;
 	int			eof;
 	int			read_state;

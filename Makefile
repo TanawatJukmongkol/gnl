@@ -6,7 +6,7 @@
 #    By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/23 15:42:57 by tjukmong          #+#    #+#              #
-#    Updated: 2023/02/11 05:21:33 by tjukmong         ###   ########.fr        #
+#    Updated: 2023/02/11 06:49:39 by tjukmong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ ${NAME}:		$(SRCOBJ)
 test:			all
 	${CC} ${CFLAGS} ${TESTFILE} ${NAME} -o ${TESTFILE:.c=.out}
 	@ echo -e "\033[1;36m========-[ Execution output ]-========\033[0;37m"		   > ${LOGFILE}
-	-@ exec ${TESTFILE:.c=.out}													  >> ${LOGFILE}
+	-@ exec ${TESTFILE:.c=.out} | cat -e										  >> ${LOGFILE}
 	@ echo -e '\n\033[1;35m============-[ Valgrind ]-============\033[0;37m'	  >> ${LOGFILE}
 	-@ valgrind ${TESTFILE:.c=.out} --leak-check=full --show-reachable=yes		  >> ${LOGFILE} 2>&1
 	@ echo -e "\033[1;32m===========-[ Norm errors ]-==========\033[0;37m"		  >> ${LOGFILE}
