@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/12 21:31:31 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/12 22:59:52 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,33 +39,39 @@ int	next_line(t_file *file, int fd)
 		if (file->read_state)
 		{
 			if (file->buffer->nodes->data[0] == EOF)
-				return (0);
+			{
+				free_all(file);
+				file->read_state = 2;
+				return (1);
+			}
 			indx = file->offset % BUFFER_SIZE;
 			while (indx < BUFFER_SIZE)
 			{
 				if (file->buffer->last->data[indx] == '\n'
 					|| file->buffer->last->data[indx] == EOF)
 				{
-					if (file->buffer->last->data[indx] == '\n')
+					if (file->buffer->last->data[indx] == EOF)
 					{
-						file->str = malloc(slen + 2);
-						file->str[slen] = '\n';
-						file->str[slen + 1] = '\0';
+						file->read_state = 2;
+						file->str = malloc(slen + 1);
 					}
 					else
-					{
-						file->str = malloc(slen + 1);
-						file->str[slen] = '\0';
-					}
+						file->str = malloc(slen + 2);
+					file->str[slen] = '\0';
 					indx = 0;
-					// printf("str_len: %lu", slen);
 					while (indx < slen)
 					{
-						file->str[indx] = file->buffer->nodes->data[file->offset % BUFFER_SIZE];
+						file->str[indx] = file->buffer->nodes->data[
+							file->offset % BUFFER_SIZE];
 						indx++;
 						file->offset++;
 						if (file->offset % BUFFER_SIZE == 0)
 							keep_buff(file);
+					}
+					if (file->read_state != 2)
+					{
+						file->str[slen] = '\n';
+						file->str[slen + 1] = '\0';
 					}
 					file->offset++;
 					return (0);
@@ -97,25 +103,15 @@ int	next_line(t_file *file, int fd)
 char	*get_next_line(int fd)
 {
 	static t_file	files[FD_MAX];
-
-	if (fd < 0)
+	
+	if (fd < 0 || files[fd].read_state == 2)
 		return (NULL);
-
-	// if (files[fd].eof)
-	// {
-	// 	// free_all(&files[fd]);
-	// 	printf("\n--- END! ---\n");
-	// 	return (NULL);
-	// }
-
-	if (files[fd].str)
-		free(files[fd].str);
-	files[fd].str = NULL;
-
+	// if (files[fd].str != NULL)
+	// 	free(files[fd].str);
+	// files[fd].str = NULL;
 	if (next_line(&files[fd], fd))
 		return (NULL);
-	
-	// printf("\nfile offset: %lu\n", files[fd].offset);
-
+	if (files[fd].read_state == 2)
+		free_all(&files[fd]);
 	return (files[fd].str);
 }
