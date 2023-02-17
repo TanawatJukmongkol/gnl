@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 19:42:14 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/17 13:58:37 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/17 17:15:16 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(void)
 	int		fd;
 	char	*str;
 
-	fd = open("/home/arch/Projects/Cadet42/get_next_line/test.txt", O_RDONLY);
+	fd = open("/Users/tjukmong/Desktop/Cadet/gnl/test.txt", O_RDONLY);
 
 	while (1)
 	{

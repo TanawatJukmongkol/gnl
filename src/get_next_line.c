@@ -6,7 +6,7 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 15:42:45 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/17 13:56:57 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/17 19:12:50 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,36 @@ char	*get_next_line(int fd)
 		files[fd].offset = 0;
 	}
 	if (read_next(&files[fd], fd))
+	{
+		files[fd].stop = 1;
+		free(files[fd].buf);
 		return (NULL);
+	}
 	if (files[fd].offset >= files[fd].size)
+	{
+		files[fd].stop = 1;
+		free(files[fd].buf);
 		return (NULL);
+	}
 	indx = 0;
 	slen = strlen_chr(files[fd].buf + files[fd].offset, '\n');
+	if (slen == BUFFER_SIZE && !files[fd].eof)
+		read_next(&files[fd], fd);
 	if (files[fd].buf[slen] != '\0')
 		slen++;
 	if (slen == 0)
+	{
+		files[fd].stop = 1;
+		free(files[fd].buf);
 		return (NULL);
+	}
 	str = malloc(slen + 1);
+	if (!str)
+	{
+		files[fd].stop = 1;
+		free(files[fd].buf);
+		return (NULL);
+	}
 	str[slen] = '\0';
 	while (indx < slen)
 	{
