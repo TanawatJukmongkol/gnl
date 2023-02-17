@@ -1,43 +1,33 @@
 [1;36m========-[ Execution output ]-========[0;37m
-14 |Hello, world!$
-5  |H e l4  | l o0  |
+01234567890123456789012345678901234567890$
+987654321098765432109876543210987654321098$
+0123456789012345678901234567890123456789012$
+987654321098765432109876543210987654321098$
+01234567890123456789012345678901234567890(null)
 [1;35m============-[ Valgrind ]-============[0;37m
-==22644== Memcheck, a memory error detector
-==22644== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==22644== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
-==22644== Command: ./src/main.out --leak-check=full --show-reachable=yes
-==22644== 
-14 |Hello, world!
-5  |H e l4  | l o0  |==22644== 
-==22644== HEAP SUMMARY:
-==22644==     in use at exit: 440 bytes in 50 blocks
-==22644==   total heap usage: 51 allocs, 1 frees, 4,536 bytes allocated
-==22644== 
-==22644== LEAK SUMMARY:
-==22644==    definitely lost: 0 bytes in 0 blocks
-==22644==    indirectly lost: 0 bytes in 0 blocks
-==22644==      possibly lost: 0 bytes in 0 blocks
-==22644==    still reachable: 440 bytes in 50 blocks
-==22644==         suppressed: 0 bytes in 0 blocks
-==22644== Rerun with --leak-check=full to see details of leaked memory
-==22644== 
-==22644== For lists of detected and suppressed errors, rerun with: -s
-==22644== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==728644== Memcheck, a memory error detector
+==728644== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==728644== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==728644== Command: ./src/main.out --leak-check=full --show-reachable=yes
+==728644== 
+01234567890123456789012345678901234567890
+987654321098765432109876543210987654321098
+0123456789012345678901234567890123456789012
+987654321098765432109876543210987654321098
+01234567890123456789012345678901234567890(null)==728644== 
+==728644== HEAP SUMMARY:
+==728644==     in use at exit: 0 bytes in 0 blocks
+==728644==   total heap usage: 441 allocs, 441 frees, 28,823 bytes allocated
+==728644== 
+==728644== All heap blocks were freed -- no leaks are possible
+==728644== 
+==728644== For lists of detected and suppressed errors, rerun with: -s
+==728644== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 [1;32m===========-[ Norm errors ]-==========[0;37m
 ./src/get_next_line.c: Error!
-Error: TOO_MANY_LINES       (line:  95, col:   1):	Function has more than 25 lines
+Error: TOO_MANY_LINES       (line:  55, col:   1):	Function has more than 25 lines
 ./src/main.c: Error!
-Error: WRONG_SCOPE_COMMENT  (line:  20, col:   5):	Comment is invalid in this scope
-Error: EMPTY_LINE_FUNCTION  (line:  21, col:   1):	Empty line in function
 Error: EMPTY_LINE_FUNCTION  (line:  23, col:   1):	Empty line in function
-Error: VAR_DECL_START_FUNC  (line:  24, col:   1):	Variable declaration not at start of function
-Error: SPACE_REPLACE_TAB    (line:  24, col:   8):	Found space when expecting tab
-Error: MISALIGNED_VAR_DECL  (line:  24, col:   9):	Misaligned variable declaration
-Error: DECL_ASSIGN_LINE     (line:  24, col:  11):	Declaration and assignation on a single line
-Error: WRONG_SCOPE_COMMENT  (line:  27, col:   9):	Comment is invalid in this scope
-Error: WRONG_SCOPE_COMMENT  (line:  29, col:   9):	Comment is invalid in this scope
-Error: WRONG_SCOPE_COMMENT  (line:  30, col:   9):	Comment is invalid in this scope
-Error: WRONG_SCOPE_COMMENT  (line:  31, col:   9):	Comment is invalid in this scope
-Error: WRONG_SCOPE_COMMENT  (line:  32, col:   9):	Comment is invalid in this scope
-Error: EMPTY_LINE_FUNCTION  (line:  34, col:   1):	Empty line in function
+./src/get_next_line_utils.c: Error!
+Error: BRACE_SHOULD_EOL     (line:  80, col:   1):	Expected newline after brace
 [1;32m======================================[0;37m

@@ -6,112 +6,75 @@
 /*   By: tjukmong <tjukmong@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:58:11 by tjukmong          #+#    #+#             */
-/*   Updated: 2023/02/11 03:02:44 by tjukmong         ###   ########.fr       */
+/*   Updated: 2023/02/17 13:58:13 by tjukmong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-t_buff	*push_buff(t_file *file)
+size_t	strlen_chr(const char *str, const char c)
 {
-	if (!file->buffer)
-	{
-		file->buffer = malloc(sizeof(t_buffer));
-		if (file->buffer != NULL)
-			file->buffer->nodes = malloc(sizeof(t_buff));
-		if (file->buffer != NULL && file->buffer->nodes != NULL)
-			file->buffer->nodes->data = malloc(BUFFER_SIZE);
-		if (file->buffer->nodes->data == NULL)
-			return (NULL);
-		file->buffer->nodes->next = NULL;
-		file->buffer->last = file->buffer->nodes;
-		file->offset = 0;
-		file->len = 1;
-		file->size = 0;
-		return (file->buffer->nodes);
-	}
-	file->buffer->last->next = malloc(sizeof(t_buff));
-	if (file->buffer->last->next != NULL)
-		file->buffer->last->next->data = malloc(BUFFER_SIZE);
-	if (file->buffer->last->next->data == NULL)
-		return (NULL);
-	file->buffer->last = file->buffer->last->next;
-	file->buffer->last->next = NULL;
-	file->len++;
-	return (file->buffer->last);
+	size_t	len;
+
+	if (!str)
+		return (0);
+	len = 0;
+	while (str[len] != '\0' && str[len] != c)
+		len++;
+	return (len);
 }
 
-t_buff	*keep_buff(t_file *file)
+char	*ft_recat(char **dst, char *str)
 {
-	t_buff	*tmp;
+	size_t	dlen;
+	size_t	slen;
+	char	*tmp;
 
-	if (!file->buffer || !file->buffer->nodes)
-		return (NULL);
-	tmp = file->buffer->nodes;
-	file->buffer->nodes = file->buffer->nodes->next;
-	if (!file->buff_re)
+	dlen = 0;
+	slen = 0;
+	if (!str)
+		return (*dst);
+	if (!dst || *dst == NULL)
 	{
-		file->buff_re = malloc(sizeof(t_buffer));
-		if (!file->buff_re)
-			return (NULL);
-		file->buff_re->nodes = tmp;
-		file->buff_re->nodes->next = NULL;
-		file->buff_re->last = file->buff_re->nodes;
-		file->len--;
-		return (file->buff_re->last);
+		*dst = str;
+		return (*dst);
 	}
-	file->buff_re->last->next = tmp;
-	file->buff_re->last->next->next = NULL;
-	file->buff_re->last = file->buff_re->last->next;
-	file->len--;
-	return (file->buff_re->last);
+	dlen = strlen_chr(*dst, '\0');
+	slen = strlen_chr(str, '\0');
+	tmp = malloc(dlen + slen + 1);
+	tmp[dlen + slen] = '\0';
+	while (slen-- > 0)
+		tmp[dlen + slen] = str[slen];
+	free(str);
+	while (dlen-- > 0)
+		tmp[dlen] = (*dst)[dlen];
+	free(*dst);
+	*dst = tmp;
+	return (*dst);
 }
 
-t_buff	*reuse_buff(t_file *file)
+int	read_next(t_files *file, int fd)
 {
-	t_buff	*tmp;
+	ssize_t	read_len;
+	char	*tmp;
 
-	if (!file->buff_re || !file->buff_re->nodes)
-		return (NULL);
-	tmp = file->buff_re->nodes;
-	file->buff_re->nodes = file->buff_re->nodes->next;
-	if (!file->buffer->nodes)
+	read_len = 1;
+	while (read_len)
 	{
-		file->buffer->nodes = tmp;
-		file->buffer->nodes->next = NULL;
-		file->buffer->last = file->buffer->nodes;
-		return (file->buffer->last);
+		tmp = malloc(BUFFER_SIZE + 1);
+		read_len = read(fd, tmp, BUFFER_SIZE);
+		if (read_len < 0)
+		{
+			free(tmp);
+			return (1);
+		}
+		tmp[read_len] = '\0';
+		file->size += read_len;
+		ft_recat(&file->buf, tmp);
+		if ((ssize_t)strlen_chr(file->buf, '\n') < read_len)
+			return (0);
 	}
-	file->buffer->last->next = tmp;
-	file->buffer->last->next->next = NULL;
-	file->buffer->last = file->buffer->last->next;
-	file->len--;
-	return (file->buffer->last);
-}
-
-void	free_buff(t_buff *buff)
-{
-	buff->next = NULL;
-	if (buff->data)
-		free(buff->data);
-	if (buff)
-		free(buff);
-}
-
-t_buff	*ittr_buff(t_buff **buff, void (*callback)(t_buff *buff))
-{
-	t_buff	*tmp;
-	t_buff	*next;
-
-	if (!buff || !*buff || !callback)
-		return (NULL);
-	tmp = *buff;
-	while (tmp)
-	{
-		next = tmp->next;
-		callback(tmp);
-		tmp = next;
-	}
-	return (tmp);
+	file->eof = 1;
+	return (0);
 }
